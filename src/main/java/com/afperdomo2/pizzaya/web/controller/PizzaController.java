@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,16 @@ public class PizzaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PizzaEntity>> getAllPizzas() {
-        return ResponseEntity.ok(this.pizzaService.getAllPizzas());
+    public ResponseEntity<List<PizzaEntity>> findAll() {
+        return ResponseEntity.ok(this.pizzaService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PizzaEntity> findById(@PathVariable Long id) {
+        PizzaEntity pizza = this.pizzaService.findById(id);
+        if (pizza == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pizza);
     }
 }

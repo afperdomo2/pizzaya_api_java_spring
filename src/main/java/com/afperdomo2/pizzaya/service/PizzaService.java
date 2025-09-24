@@ -2,21 +2,24 @@ package com.afperdomo2.pizzaya.service;
 
 import java.util.List;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
+import com.afperdomo2.pizzaya.persistence.repository.PizzaRepository;
 
 @Service
 public class PizzaService {
-    private final JdbcTemplate jdbcTemplate;
+    private final PizzaRepository pizzaRepository;
 
-    public PizzaService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public PizzaService(PizzaRepository pizzaRepository) {
+        this.pizzaRepository = pizzaRepository;
     }
 
-    public List<PizzaEntity> getAllPizzas() {
-        return this.jdbcTemplate.query("SELECT * FROM pizzas", new BeanPropertyRowMapper<>(PizzaEntity.class));
+    public List<PizzaEntity> findAll() {
+        return this.pizzaRepository.findAll();
+    }
+
+    public PizzaEntity findById(Long id) {
+        return this.pizzaRepository.findById(id).orElse(null);
     }
 }
