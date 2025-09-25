@@ -1,20 +1,14 @@
 package com.afperdomo2.pizzaya.persistence.entity;
 
-import java.math.BigDecimal;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
@@ -47,6 +41,7 @@ public class OrderItemEntity {
     @ManyToOne()
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "customer_order_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private CustomerOrderEntity customerOrder;
 
     @ManyToOne()

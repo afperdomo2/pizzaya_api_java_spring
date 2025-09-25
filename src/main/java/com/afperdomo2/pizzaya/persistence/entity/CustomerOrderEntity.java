@@ -1,21 +1,14 @@
 package com.afperdomo2.pizzaya.persistence.entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "customer_orders")
@@ -43,10 +36,11 @@ public class CustomerOrderEntity {
     private LocalDateTime date;
 
     // Relations
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // Lazy para evitar carga innecesaria
     @JoinColumn(name = "customer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private CustomerEntity customer;
 
-    @OneToMany(mappedBy = "customerOrder")
+    @OneToMany(mappedBy = "customerOrder", fetch = FetchType.EAGER) // Eager para cargar los items junto con la orden
     private List<OrderItemEntity> items;
 }
