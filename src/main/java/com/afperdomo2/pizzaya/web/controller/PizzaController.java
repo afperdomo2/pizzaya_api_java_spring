@@ -4,15 +4,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
@@ -49,8 +44,7 @@ public class PizzaController {
     @Operation(summary = "Obtener una pizza por ID", description = "Devuelve una pizza específica")
     @ApiResponse(responseCode = "200", description = "Pizza encontrada")
     @ApiResponse(responseCode = "404", description = "Pizza no encontrada", content = @Content())
-    public ResponseEntity<PizzaEntity> findById(
-            @Parameter(description = "ID de la pizza", example = "1") @PathVariable Long id) {
+    public ResponseEntity<PizzaEntity> findById(@Parameter(description = "ID de la pizza", example = "1") @PathVariable Long id) {
         PizzaEntity pizza = this.pizzaService.findById(id);
         if (pizza == null) {
             return ResponseEntity.notFound().build();
@@ -61,8 +55,7 @@ public class PizzaController {
     @PostMapping
     @Operation(summary = "Crear una nueva pizza", description = "Crea una nueva pizza")
     @ApiResponse(responseCode = "201", description = "Pizza creada exitosamente")
-    public ResponseEntity<PizzaEntity> create(
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos de la pizza a crear", required = true) @Valid @RequestBody CreatePizzaDto pizzaDto) {
+    public ResponseEntity<PizzaEntity> create(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos de la pizza a crear", required = true) @Valid @RequestBody CreatePizzaDto pizzaDto) {
         try {
             PizzaEntity createdPizza = this.pizzaService.create(pizzaDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdPizza);
@@ -77,9 +70,7 @@ public class PizzaController {
     @ApiResponse(responseCode = "200", description = "Pizza actualizada exitosamente")
     @ApiResponse(responseCode = "404", description = "Pizza no encontrada", content = @Content())
     @ApiResponse(responseCode = "400", description = "Datos inválidos", content = @Content())
-    public ResponseEntity<PizzaEntity> update(
-            @Parameter(description = "ID de la pizza", example = "1") @PathVariable Long id,
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos de la pizza a actualizar", required = true) @Valid @RequestBody UpdatePizzaDto pizzaDto) {
+    public ResponseEntity<PizzaEntity> update(@Parameter(description = "ID de la pizza", example = "1") @PathVariable Long id, @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Datos de la pizza a actualizar", required = true) @Valid @RequestBody UpdatePizzaDto pizzaDto) {
         try {
             PizzaEntity updatedPizza = this.pizzaService.update(id, pizzaDto);
             if (updatedPizza == null) {
@@ -88,6 +79,23 @@ public class PizzaController {
             return ResponseEntity.ok(updatedPizza);
         } catch (Exception e) {
             log.error("Error al actualizar la pizza", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una pizza", description = "Elimina una pizza existente")
+    @ApiResponse(responseCode = "204", description = "Pizza eliminada exitosamente")
+    @ApiResponse(responseCode = "500", description = "Error al eliminar la pizza", content = @Content())
+    public HttpEntity<Void> delete(@Parameter(description = "ID de la pizza", example = "1") @PathVariable Long id) {
+        try {
+            PizzaEntity deletedPizza = this.pizzaService.delete(id);
+            if (deletedPizza == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            log.error("Error al eliminar la pizza", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

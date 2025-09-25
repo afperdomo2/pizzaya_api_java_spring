@@ -41,4 +41,13 @@ public class PizzaService {
         pizzaMapper.updateEntity(pizza, dto);
         return this.pizzaRepository.save(pizza);
     }
+
+    public PizzaEntity delete(Long id) {
+        PizzaEntity pizza = this.pizzaRepository.findById(id).orElse(null);
+        if (pizza == null) {
+            return null;
+        }
+        this.pizzaRepository.deleteById(id);
+        return pizza;
+    }
 }
