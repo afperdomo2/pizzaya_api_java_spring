@@ -28,4 +28,18 @@ public class CustomerOrderController {
     public ResponseEntity<List<CustomerOrderEntity>> findAll() {
         return ResponseEntity.ok(this.customerOrderService.findAll());
     }
+
+    @GetMapping("/today")
+    @Operation(summary = "Obtener las ordenes de clientes del día", description = "Devuelve una lista de las órdenes de clientes realizadas hoy")
+    @ApiResponse(responseCode = "200", description = "Órdenes encontradas")
+    public ResponseEntity<List<CustomerOrderEntity>> findAllToday() {
+        return ResponseEntity.ok(this.customerOrderService.findAllToday());
+    }
+
+    @GetMapping("/outside")
+    @Operation(summary = "Obtener las ordenes de clientes para llevar o delivery", description = "Devuelve una lista de las órdenes de clientes que son para llevar o delivery")
+    @ApiResponse(responseCode = "200", description = "Órdenes encontradas")
+    public ResponseEntity<List<CustomerOrderEntity>> findAllOutsideOrders() {
+        return ResponseEntity.ok(this.customerOrderService.findAllOutsideOrders());
+    }
 }
