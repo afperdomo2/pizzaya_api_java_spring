@@ -37,6 +37,14 @@ public class PizzaController {
         return ResponseEntity.ok(this.pizzaService.findAll());
     }
 
+    @GetMapping("/cheaper-than/{price}")
+    @Operation(summary = "Obtener las 3 pizzas más baratas por debajo de un precio dado", description = "Devuelve una lista de las 3 pizzas más baratas que son más baratas que el precio proporcionado")
+    @ApiResponse(responseCode = "200", description = "Lista de pizzas obtenida exitosamente")
+    @ApiResponse(responseCode = "400", description = "Parámetro de precio faltante o inválido", content = @Content())
+    public ResponseEntity<List<PizzaEntity>> findTop3CheaperThan(@PathVariable @Parameter(description = "Precio máximo para filtrar las pizzas", example = "15.0") double price) {
+        return ResponseEntity.ok(this.pizzaService.findTop3CheaperThan(price));
+    }
+
     @GetMapping("/vegan/count")
     @Operation(summary = "Contar pizzas veganas", description = "Devuelve el número total de pizzas veganas")
     @ApiResponse(responseCode = "200", description = "Número de pizzas veganas obtenido exitosamente")
