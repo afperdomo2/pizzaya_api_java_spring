@@ -1,14 +1,13 @@
 package com.afperdomo2.pizzaya.service;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.afperdomo2.pizzaya.persistence.domain.dto.CreatePizzaDto;
 import com.afperdomo2.pizzaya.persistence.domain.dto.UpdatePizzaDto;
 import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
 import com.afperdomo2.pizzaya.persistence.mapper.PizzaMapper;
 import com.afperdomo2.pizzaya.persistence.repository.PizzaRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PizzaService {
@@ -22,6 +21,14 @@ public class PizzaService {
 
     public List<PizzaEntity> findAll() {
         return this.pizzaRepository.findAll();
+    }
+
+    public List<PizzaEntity> findAllAvailable() {
+        return this.pizzaRepository.findAllByIsAvailableTrueOrderByPrice();
+    }
+
+    public PizzaEntity findAvailableByName(String name) {
+        return this.pizzaRepository.findByIsAvailableTrueAndNameIgnoreCase(name);
     }
 
     public PizzaEntity findById(Long id) {

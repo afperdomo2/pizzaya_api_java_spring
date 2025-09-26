@@ -1,7 +1,15 @@
 package com.afperdomo2.pizzaya.web.controller;
 
-import java.util.List;
-
+import com.afperdomo2.pizzaya.persistence.domain.dto.CreatePizzaDto;
+import com.afperdomo2.pizzaya.persistence.domain.dto.UpdatePizzaDto;
+import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
+import com.afperdomo2.pizzaya.service.PizzaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -9,18 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
-import com.afperdomo2.pizzaya.persistence.domain.dto.CreatePizzaDto;
-import com.afperdomo2.pizzaya.persistence.domain.dto.UpdatePizzaDto;
-import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
-import com.afperdomo2.pizzaya.service.PizzaService;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 @RestController
 @RequestMapping("/pizzas")
@@ -38,6 +35,26 @@ public class PizzaController {
     @ApiResponse(responseCode = "200", description = "Lista de pizzas obtenida exitosamente")
     public ResponseEntity<List<PizzaEntity>> findAll() {
         return ResponseEntity.ok(this.pizzaService.findAll());
+    }
+
+    @GetMapping("/available")
+    @Operation(summary = "Obtener todas las pizzas disponibles", description = "Devuelve una lista de todas las pizzas disponibles ordenadas por precio")
+    @ApiResponse(responseCode = "200", description = "Lista de pizzas disponibles obtenida exitosamente")
+    public ResponseEntity<List<PizzaEntity>> findAllAvailable() {
+        return ResponseEntity.ok(this.pizzaService.findAllAvailable());
+    }
+
+    @GetMapping("/available/search")
+    @Operation(summary = "Buscar pizzas disponibles por nombre", description = "Devuelve una lista de pizzas disponibles que coinciden con el nombre proporcionado")
+    @ApiResponse(responseCode = "200", description = "Lista de pizzas encontradas")
+    @ApiResponse(responseCode = "400", description = "Parámetro de nombre faltante o inválido", content = @Content())
+    @ApiResponse(responseCode = "404", description = "No se encontraron pizzas con el nombre proporcionado", content = @Content())
+    public ResponseEntity<PizzaEntity> findAllAvailableByName(@RequestParam String name) {
+        PizzaEntity pizza = this.pizzaService.findAvailableByName(name);
+        if (pizza == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pizza);
     }
 
     @GetMapping("/{id}")

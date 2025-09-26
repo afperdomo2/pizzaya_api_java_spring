@@ -1,9 +1,12 @@
 package com.afperdomo2.pizzaya.persistence.repository;
 
+import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
 import org.springframework.data.repository.ListCrudRepository;
 
-import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
+import java.util.List;
 
 public interface PizzaRepository extends ListCrudRepository<PizzaEntity, Long> {
+    List<PizzaEntity> findAllByIsAvailableTrueOrderByPrice();
 
+    PizzaEntity findByIsAvailableTrueAndNameIgnoreCase(String name);
 }
