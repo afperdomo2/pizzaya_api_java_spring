@@ -45,8 +45,8 @@ public class PizzaController {
     }
 
     @GetMapping("/available/search")
-    @Operation(summary = "Buscar pizzas disponibles por nombre", description = "Devuelve una lista de pizzas disponibles que coinciden con el nombre proporcionado")
-    @ApiResponse(responseCode = "200", description = "Lista de pizzas encontradas")
+    @Operation(summary = "Buscar una pizza disponible por nombre", description = "Devuelve una pizza disponible que coincide exactamente con el nombre proporcionado")
+    @ApiResponse(responseCode = "200", description = "Pizza encontrada")
     @ApiResponse(responseCode = "400", description = "Parámetro de nombre faltante o inválido", content = @Content())
     @ApiResponse(responseCode = "404", description = "No se encontraron pizzas con el nombre proporcionado", content = @Content())
     public ResponseEntity<PizzaEntity> findAllAvailableByName(@RequestParam String name) {
@@ -55,6 +55,22 @@ public class PizzaController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pizza);
+    }
+
+    @GetMapping("/available/with-ingredient/{ingredient}")
+    @Operation(summary = "Buscar pizzas disponibles por ingrediente", description = "Devuelve una lista de pizzas disponibles que contienen el ingrediente proporcionado en su descripción")
+    @ApiResponse(responseCode = "200", description = "Lista de pizzas encontradas")
+    @ApiResponse(responseCode = "400", description = "Parámetro de ingrediente faltante o inválido", content = @Content())
+    public ResponseEntity<List<PizzaEntity>> findAllAvailableByIngredient(@Parameter(description = "Ingrediente a buscar en la descripción de la pizza", example = "queso") @PathVariable String ingredient) {
+        return ResponseEntity.ok(this.pizzaService.findAvailableWithIngredient(ingredient));
+    }
+
+    @GetMapping("/available/without-ingredient/{ingredient}")
+    @Operation(summary = "Buscar pizzas disponibles sin un ingrediente específico", description = "Devuelve una lista de pizzas disponibles que no contienen el ingrediente proporcionado en su descripción")
+    @ApiResponse(responseCode = "200", description = "Lista de pizzas encontradas")
+    @ApiResponse(responseCode = "400", description = "Parámetro de ingrediente faltante o inválido", content = @Content())
+    public ResponseEntity<List<PizzaEntity>> findAllAvailableWithoutIngredient(@Parameter(description = "Ingrediente a excluir de la descripción de la pizza", example = "piña") @PathVariable String ingredient) {
+        return ResponseEntity.ok(this.pizzaService.findAvailableWithoutIngredient(ingredient));
     }
 
     @GetMapping("/{id}")
