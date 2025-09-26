@@ -19,6 +19,10 @@ public class PizzaService {
         this.pizzaMapper = pizzaMapper;
     }
 
+    public int countVeganPizzas() {
+        return this.pizzaRepository.countByIsVeganTrue();
+    }
+
     public List<PizzaEntity> findAll() {
         return this.pizzaRepository.findAll();
     }

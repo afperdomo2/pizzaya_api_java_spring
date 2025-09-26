@@ -37,6 +37,13 @@ public class PizzaController {
         return ResponseEntity.ok(this.pizzaService.findAll());
     }
 
+    @GetMapping("/vegan/count")
+    @Operation(summary = "Contar pizzas veganas", description = "Devuelve el número total de pizzas veganas")
+    @ApiResponse(responseCode = "200", description = "Número de pizzas veganas obtenido exitosamente")
+    public int countVeganPizzas() {
+        return this.pizzaService.countVeganPizzas();
+    }
+
     @GetMapping("/available")
     @Operation(summary = "Obtener todas las pizzas disponibles", description = "Devuelve una lista de todas las pizzas disponibles ordenadas por precio")
     @ApiResponse(responseCode = "200", description = "Lista de pizzas disponibles obtenida exitosamente")
