@@ -4,7 +4,10 @@ import com.afperdomo2.pizzaya.persistence.domain.dto.CreatePizzaDto;
 import com.afperdomo2.pizzaya.persistence.domain.dto.UpdatePizzaDto;
 import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
 import com.afperdomo2.pizzaya.persistence.mapper.PizzaMapper;
+import com.afperdomo2.pizzaya.persistence.repository.PizzaPagSortRepository;
 import com.afperdomo2.pizzaya.persistence.repository.PizzaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +15,12 @@ import java.util.List;
 @Service
 public class PizzaService {
     private final PizzaRepository pizzaRepository;
+    private final PizzaPagSortRepository pizzaPagSortRepository;
     private final PizzaMapper pizzaMapper;
 
-    public PizzaService(PizzaRepository pizzaRepository, PizzaMapper pizzaMapper) {
+    public PizzaService(PizzaRepository pizzaRepository, PizzaPagSortRepository pizzaPagSortRepository, PizzaMapper pizzaMapper) {
         this.pizzaRepository = pizzaRepository;
+        this.pizzaPagSortRepository = pizzaPagSortRepository;
         this.pizzaMapper = pizzaMapper;
     }
 
@@ -25,6 +30,11 @@ public class PizzaService {
 
     public List<PizzaEntity> findAll() {
         return this.pizzaRepository.findAll();
+    }
+
+    public Page<PizzaEntity> findAllPaginated(int page, int size) {
+        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        return this.pizzaPagSortRepository.findAll(pageable);
     }
 
     public List<PizzaEntity> findAllAvailable() {

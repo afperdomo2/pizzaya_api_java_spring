@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +32,10 @@ public class PizzaController {
     }
 
     @GetMapping
-    @Operation(summary = "Obtener todas las pizzas", description = "Devuelve una lista de todas las pizzas")
+    @Operation(summary = "Obtener todas las pizzas con paginación", description = "Devuelve una lista paginada de todas las pizzas")
     @ApiResponse(responseCode = "200", description = "Lista de pizzas obtenida exitosamente")
-    public ResponseEntity<List<PizzaEntity>> findAll() {
-        return ResponseEntity.ok(this.pizzaService.findAll());
+    public ResponseEntity<Page<PizzaEntity>> findAll(@RequestParam(defaultValue = "0") @Parameter(description = "Número de página (comienza en 0)", example = "0") int page, @RequestParam(defaultValue = "10") @Parameter(description = "Tamaño de la página", example = "10") int size) {
+        return ResponseEntity.ok(this.pizzaService.findAllPaginated(page, size));
     }
 
     @GetMapping("/cheaper-than/{price}")
