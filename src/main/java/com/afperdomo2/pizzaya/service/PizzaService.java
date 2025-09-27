@@ -7,7 +7,9 @@ import com.afperdomo2.pizzaya.persistence.mapper.PizzaMapper;
 import com.afperdomo2.pizzaya.persistence.repository.PizzaPagSortRepository;
 import com.afperdomo2.pizzaya.persistence.repository.PizzaRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,17 +30,15 @@ public class PizzaService {
         return this.pizzaRepository.countByIsVeganTrue();
     }
 
-    public List<PizzaEntity> findAll() {
-        return this.pizzaRepository.findAll();
-    }
-
-    public Page<PizzaEntity> findAllPaginated(int page, int size) {
-        Pageable pageable = org.springframework.data.domain.PageRequest.of(page, size);
+    public Page<PizzaEntity> findALl(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
         return this.pizzaPagSortRepository.findAll(pageable);
     }
 
-    public List<PizzaEntity> findAllAvailable() {
-        return this.pizzaRepository.findAllByIsAvailableTrueOrderByPrice();
+    public Page<PizzaEntity> findAllAvailable(int page, int size, String sortBy, String direction) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return this.pizzaPagSortRepository.findAllByIsAvailableTrue(pageable);
     }
 
     public PizzaEntity findAvailableByName(String name) {
