@@ -1,11 +1,13 @@
 package com.afperdomo2.pizzaya.web.controller;
 
 import com.afperdomo2.pizzaya.persistence.entity.CustomerOrderEntity;
+import com.afperdomo2.pizzaya.persistence.projection.OrderSummary;
 import com.afperdomo2.pizzaya.service.CustomerOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.hibernate.query.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,5 +53,19 @@ public class CustomerOrderController {
             @Parameter(description = "ID del cliente", required = true, example = "1") Long customerId
     ) {
         return ResponseEntity.ok(this.customerOrderService.findCustomerOrders(customerId));
+    }
+
+    @GetMapping("/{orderId}/summary")
+    @Operation(summary = "Obtener el resumen de una orden específica", description = "Devuelve el resumen de una orden específica")
+    @ApiResponse(responseCode = "200", description = "Resumen de la orden encontrado")
+    @ApiResponse(responseCode = "404", description = "Orden no encontrada")
+    public ResponseEntity<OrderSummary> findOrderSummary(
+            @Parameter(description = "ID de la orden", required = true, example = "1") Long orderId
+    ) {
+        OrderSummary orderSummary = this.customerOrderService.findOrderSummary(orderId);
+        if (orderSummary == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(orderSummary);
     }
 }

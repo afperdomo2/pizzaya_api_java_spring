@@ -2,6 +2,7 @@ package com.afperdomo2.pizzaya.service;
 
 import com.afperdomo2.pizzaya.persistence.entity.CustomerOrderEntity;
 import com.afperdomo2.pizzaya.persistence.entity.OrderType;
+import com.afperdomo2.pizzaya.persistence.projection.OrderSummary;
 import com.afperdomo2.pizzaya.persistence.repository.CustomerOrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,9 @@ public class CustomerOrderService {
 
     public List<CustomerOrderEntity> findCustomerOrders(Long customerId) {
         return this.customerOrderRepository.findCustomerOrders(customerId);
+    }
+
+    public OrderSummary findOrderSummary(Long orderId) {
+        return this.customerOrderRepository.findOrderSummary(orderId);
     }
 }
