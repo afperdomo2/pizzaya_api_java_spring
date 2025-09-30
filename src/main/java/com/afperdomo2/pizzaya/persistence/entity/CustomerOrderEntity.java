@@ -42,5 +42,6 @@ public class CustomerOrderEntity {
     private CustomerEntity customer;
 
     @OneToMany(mappedBy = "customerOrder", fetch = FetchType.EAGER) // Eager para cargar los items junto con la orden
+    @OrderBy("subtotal ASC") // Ordenar los items por subtotal ascendente
     private List<OrderItemEntity> items;
 }

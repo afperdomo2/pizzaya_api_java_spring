@@ -30,4 +30,8 @@ public class CustomerOrderService {
         List<String> outsideOrderTypeCodes = List.of(OrderType.DELIVERY.getCode(), OrderType.CARRYOUT.getCode());
         return this.customerOrderRepository.findAllByOrderTypeIn(outsideOrderTypeCodes);
     }
+
+    public List<CustomerOrderEntity> findCustomerOrders(Long customerId) {
+        return this.customerOrderRepository.findCustomerOrders(customerId);
+    }
 }

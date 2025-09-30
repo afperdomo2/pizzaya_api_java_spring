@@ -3,6 +3,7 @@ package com.afperdomo2.pizzaya.web.controller;
 import com.afperdomo2.pizzaya.persistence.entity.CustomerOrderEntity;
 import com.afperdomo2.pizzaya.service.CustomerOrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -41,5 +42,14 @@ public class CustomerOrderController {
     @ApiResponse(responseCode = "200", description = "Órdenes encontradas")
     public ResponseEntity<List<CustomerOrderEntity>> findAllOutsideOrders() {
         return ResponseEntity.ok(this.customerOrderService.findAllOutsideOrders());
+    }
+
+    @GetMapping("/customer/{customerId}")
+    @Operation(summary = "Obtener las ordenes de un cliente específico", description = "Devuelve una lista de las órdenes de un cliente específico")
+    @ApiResponse(responseCode = "200", description = "Órdenes encontradas")
+    public ResponseEntity<List<CustomerOrderEntity>> findCustomerOrders(
+            @Parameter(description = "ID del cliente", required = true, example = "1") Long customerId
+    ) {
+        return ResponseEntity.ok(this.customerOrderService.findCustomerOrders(customerId));
     }
 }
