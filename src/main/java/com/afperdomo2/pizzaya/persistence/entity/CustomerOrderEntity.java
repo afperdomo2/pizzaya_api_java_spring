@@ -1,5 +1,6 @@
 package com.afperdomo2.pizzaya.persistence.entity;
 
+import com.afperdomo2.pizzaya.persistence.audit.AuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;

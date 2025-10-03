@@ -1,4 +1,4 @@
-package com.afperdomo2.pizzaya.persistence.entity;
+package com.afperdomo2.pizzaya.persistence.audit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

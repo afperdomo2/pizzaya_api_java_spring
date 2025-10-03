@@ -1,20 +1,23 @@
 package com.afperdomo2.pizzaya.persistence.entity;
 
+import com.afperdomo2.pizzaya.persistence.audit.AuditPizzaListener;
+import com.afperdomo2.pizzaya.persistence.audit.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, AuditPizzaListener.class})
 @Table(name = "pizzas")
 @Getter
 @Setter
 @NoArgsConstructor
-public class PizzaEntity extends AuditableEntity {
+public class PizzaEntity extends AuditableEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,4 +39,9 @@ public class PizzaEntity extends AuditableEntity {
 
     @Column(name = "is_available", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isAvailable;
+
+    @Override
+    public String toString() {
+        return "PizzaEntity{" + "id=" + id + ", name='" + name + '\'' + ", description='" + description + '\'' + ", price=" + price + ", isVegetarian=" + isVegetarian + ", isVegan=" + isVegan + ", isAvailable=" + isAvailable + '}';
+    }
 }
