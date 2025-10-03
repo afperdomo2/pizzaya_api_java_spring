@@ -1,18 +1,14 @@
 package com.afperdomo2.pizzaya.service.dto;
 
-import java.math.BigDecimal;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
+import java.math.BigDecimal;
+
 @Schema(description = "DTO para actualizar una pizza")
 public record UpdatePizzaDto(
-        @Schema(description = "Nombre de la pizza", example = "Margherita")
-        @NotBlank(message = "El nombre no puede estar vacío")
-        String name,
-
         @Schema(description = "Descripción de la pizza", example = "Pizza clásica con tomate, mozzarella y albahaca")
         @NotBlank(message = "La descripción no puede estar vacía")
         String description,

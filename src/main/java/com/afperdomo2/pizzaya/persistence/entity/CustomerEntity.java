@@ -1,19 +1,18 @@
 package com.afperdomo2.pizzaya.persistence.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "customers")
 @Getter
 @Setter
 @NoArgsConstructor
-public class CustomerEntity {
+public class CustomerEntity extends AuditableEntity {
     @Id
     @Column(nullable = false)
     private Long id;
