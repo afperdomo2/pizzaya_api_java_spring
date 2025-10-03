@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import com.afperdomo2.pizzaya.persistence.domain.dto.CreatePizzaDto;
-import com.afperdomo2.pizzaya.persistence.domain.dto.UpdatePizzaDto;
+import com.afperdomo2.pizzaya.service.dto.CreatePizzaDto;
+import com.afperdomo2.pizzaya.service.dto.UpdatePizzaDto;
 import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
 
 @Mapper(componentModel = "spring")

@@ -1,9 +1,9 @@
 package com.afperdomo2.pizzaya.web.controller;
 
-import com.afperdomo2.pizzaya.persistence.domain.dto.CreatePizzaDto;
-import com.afperdomo2.pizzaya.persistence.domain.dto.UpdatePizzaDto;
 import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
 import com.afperdomo2.pizzaya.service.PizzaService;
+import com.afperdomo2.pizzaya.service.dto.CreatePizzaDto;
+import com.afperdomo2.pizzaya.service.dto.UpdatePizzaDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

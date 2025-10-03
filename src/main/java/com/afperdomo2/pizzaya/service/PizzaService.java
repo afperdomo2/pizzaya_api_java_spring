@@ -1,11 +1,11 @@
 package com.afperdomo2.pizzaya.service;
 
-import com.afperdomo2.pizzaya.persistence.domain.dto.CreatePizzaDto;
-import com.afperdomo2.pizzaya.persistence.domain.dto.UpdatePizzaDto;
 import com.afperdomo2.pizzaya.persistence.entity.PizzaEntity;
 import com.afperdomo2.pizzaya.persistence.mapper.PizzaMapper;
 import com.afperdomo2.pizzaya.persistence.repository.PizzaPagSortRepository;
 import com.afperdomo2.pizzaya.persistence.repository.PizzaRepository;
+import com.afperdomo2.pizzaya.service.dto.CreatePizzaDto;
+import com.afperdomo2.pizzaya.service.dto.UpdatePizzaDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
