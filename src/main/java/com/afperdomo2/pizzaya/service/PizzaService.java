@@ -6,11 +6,13 @@ import com.afperdomo2.pizzaya.persistence.repository.PizzaPagSortRepository;
 import com.afperdomo2.pizzaya.persistence.repository.PizzaRepository;
 import com.afperdomo2.pizzaya.service.dto.CreatePizzaDto;
 import com.afperdomo2.pizzaya.service.dto.UpdatePizzaDto;
+import com.afperdomo2.pizzaya.service.dto.UpdatePizzaPriceDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -73,6 +75,11 @@ public class PizzaService {
         }
         pizzaMapper.updateEntity(pizza, dto);
         return this.pizzaRepository.save(pizza);
+    }
+
+    @Transactional
+    public void updatePrice(UpdatePizzaPriceDto updatePizzaPriceDto) {
+        this.pizzaRepository.updatePrice(updatePizzaPriceDto);
     }
 
     public PizzaEntity delete(Long id) {
