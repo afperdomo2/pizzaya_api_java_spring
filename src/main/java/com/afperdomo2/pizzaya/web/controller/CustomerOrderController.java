@@ -3,15 +3,14 @@ package com.afperdomo2.pizzaya.web.controller;
 import com.afperdomo2.pizzaya.persistence.entity.CustomerOrderEntity;
 import com.afperdomo2.pizzaya.persistence.projection.OrderSummary;
 import com.afperdomo2.pizzaya.service.CustomerOrderService;
+import com.afperdomo2.pizzaya.service.dto.RandomOrderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.hibernate.query.Order;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -67,5 +66,12 @@ public class CustomerOrderController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(orderSummary);
+    }
+
+    @PostMapping("/random")
+    @Operation(summary = "Guardar una orden aleatoria para un cliente", description = "Guarda una orden aleatoria para un cliente específico utilizando un procedimiento almacenado")
+    @ApiResponse(responseCode = "200", description = "Orden guardada exitosamente")
+    public ResponseEntity<Boolean> saveRandomOrder(@RequestBody RandomOrderDto randomOrderDto) {
+        return ResponseEntity.ok(this.customerOrderService.saveRandomOrder(randomOrderDto));
     }
 }

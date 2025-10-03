@@ -3,6 +3,7 @@ package com.afperdomo2.pizzaya.persistence.repository;
 import com.afperdomo2.pizzaya.persistence.entity.CustomerOrderEntity;
 import com.afperdomo2.pizzaya.persistence.projection.OrderSummary;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -29,4 +30,7 @@ public interface CustomerOrderRepository extends ListCrudRepository<CustomerOrde
             nativeQuery = true
     )
     OrderSummary findOrderSummary(@Param("orderId") Long orderId);
+
+    @Procedure(value = "take_random_pizza_order", outputParameterName = "order_taken")
+    boolean saveRandomOrder(@Param("customer_id") Long customerId, @Param("order_type") String orderType);
 }

@@ -4,7 +4,9 @@ import com.afperdomo2.pizzaya.persistence.entity.CustomerOrderEntity;
 import com.afperdomo2.pizzaya.persistence.entity.OrderType;
 import com.afperdomo2.pizzaya.persistence.projection.OrderSummary;
 import com.afperdomo2.pizzaya.persistence.repository.CustomerOrderRepository;
+import com.afperdomo2.pizzaya.service.dto.RandomOrderDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -38,5 +40,15 @@ public class CustomerOrderService {
 
     public OrderSummary findOrderSummary(Long orderId) {
         return this.customerOrderRepository.findOrderSummary(orderId);
+    }
+
+    @Transactional
+    public Boolean saveRandomOrder(RandomOrderDto randomOrderDto) {
+        System.out.println("Saving random order for customer ID: " + randomOrderDto.getCustomerId() +
+                " with order type: " + randomOrderDto.getOrderType());
+        return this.customerOrderRepository.saveRandomOrder(
+                randomOrderDto.getCustomerId(),
+                randomOrderDto.getOrderType()
+        );
     }
 }
