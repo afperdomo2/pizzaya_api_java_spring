@@ -155,16 +155,11 @@ public class PizzaController {
     @ApiResponse(responseCode = "204", description = "Precio de la pizza actualizado exitosamente")
     @ApiResponse(responseCode = "500", description = "Error al actualizar el precio de la pizza", content = @Content())
     public HttpEntity<Void> updatePrice(@RequestBody UpdatePizzaPriceDto dto) {
-        try {
-            PizzaEntity pizza = this.pizzaService.findById(dto.getId());
-            if (pizza == null) {
-                return ResponseEntity.notFound().build();
-            }
-            this.pizzaService.updatePrice(dto);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            log.error("Error al actualizar el precio de la pizza", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        PizzaEntity pizza = this.pizzaService.findById(dto.getId());
+        if (pizza == null) {
+            return ResponseEntity.notFound().build();
         }
+        this.pizzaService.updatePrice(dto);
+        return ResponseEntity.noContent().build();
     }
 }

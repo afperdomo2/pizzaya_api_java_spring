@@ -7,6 +7,7 @@ import com.afperdomo2.pizzaya.persistence.repository.PizzaRepository;
 import com.afperdomo2.pizzaya.service.dto.CreatePizzaDto;
 import com.afperdomo2.pizzaya.service.dto.UpdatePizzaDto;
 import com.afperdomo2.pizzaya.service.dto.UpdatePizzaPriceDto;
+import com.afperdomo2.pizzaya.service.exception.EmailApiException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -77,9 +78,15 @@ public class PizzaService {
         return this.pizzaRepository.save(pizza);
     }
 
-    @Transactional
+    // No se revierte la transacción si ocurre EmailApiException
+    @Transactional(noRollbackFor = EmailApiException.class)
     public void updatePrice(UpdatePizzaPriceDto updatePizzaPriceDto) {
         this.pizzaRepository.updatePrice(updatePizzaPriceDto);
+        this.sendEmailNotification();
+    }
+
+    private void sendEmailNotification() {
+        throw new EmailApiException();
     }
 
     public PizzaEntity delete(Long id) {
