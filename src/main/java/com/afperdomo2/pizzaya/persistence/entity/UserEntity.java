@@ -1,6 +1,5 @@
 package com.afperdomo2.pizzaya.persistence.entity;
 
-import com.afperdomo2.pizzaya.persistence.audit.AuditPizzaListener;
 import com.afperdomo2.pizzaya.persistence.audit.AuditableEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serializable;
 
 @Entity
-@EntityListeners({AuditingEntityListener.class, AuditPizzaListener.class})
+@EntityListeners({AuditingEntityListener.class})
 @Table(name = "users")
 @Getter
 @Setter
@@ -21,7 +20,7 @@ public class UserEntity extends AuditableEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false, unique = true)
@@ -33,6 +32,6 @@ public class UserEntity extends AuditableEntity implements Serializable {
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
 
-    @Column(name = "is_blocked", columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean isBlocked;
+    @Column(name = "is_locked", columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isLocked;
 }
