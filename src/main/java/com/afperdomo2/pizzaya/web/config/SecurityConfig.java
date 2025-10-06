@@ -19,10 +19,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizeRequests ->
                         customizeRequests
-                                .requestMatchers(HttpMethod.GET, "/pizzas/**").hasAnyRole("ADMIN", "CUSTOMER")
+                                .requestMatchers(HttpMethod.GET, "/pizzas/**").hasAnyRole("ADMIN", "CUSTOMER", "EMPLOYEE")
                                 .requestMatchers(HttpMethod.POST, "/pizzas/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/pizzas/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PATCH).denyAll()
+                                .requestMatchers("/orders/random").hasAuthority("RANDOM_ORDER")
                                 .requestMatchers("/orders/**").hasRole("ADMIN")
                                 .requestMatchers("/customers/**").hasRole("ADMIN")
                                 .anyRequest()
