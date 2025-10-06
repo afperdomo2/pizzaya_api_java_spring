@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 public class UserSecurityService implements UserDetailsService {
     private final UserRepository userRepository;
@@ -21,12 +24,14 @@ public class UserSecurityService implements UserDetailsService {
         UserEntity user = this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
 
-        System.out.println(user);
+        String[] roles = user.getRoles().stream()
+                .map(r -> r.getId().getRole())
+                .toArray(String[]::new);
 
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles("ADMIN")
+                .roles(roles)
                 .accountLocked(user.getIsLocked())
                 .disabled(!user.getIsActive())
                 .build();

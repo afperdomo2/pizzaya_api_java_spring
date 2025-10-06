@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @EntityListeners({AuditingEntityListener.class})
@@ -34,4 +35,8 @@ public class UserEntity extends AuditableEntity implements Serializable {
 
     @Column(name = "is_locked", columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean isLocked;
+
+    // Relaciones
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserRoleEntity> roles;
 }
