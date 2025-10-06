@@ -2,6 +2,7 @@ package com.afperdomo2.pizzaya.web.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,6 +16,9 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizeRequests -> {
+                    customizeRequests.requestMatchers(HttpMethod.GET, "/pizzas/**").permitAll();
+                    customizeRequests.requestMatchers(HttpMethod.PATCH).denyAll();
+
                     customizeRequests.anyRequest().authenticated();
                 })
                 .httpBasic(Customizer.withDefaults());
