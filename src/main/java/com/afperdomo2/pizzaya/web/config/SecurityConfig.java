@@ -20,12 +20,17 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(customizeRequests -> {
-                    customizeRequests.requestMatchers(HttpMethod.GET, "/pizzas/**").permitAll();
-                    customizeRequests.requestMatchers(HttpMethod.PATCH).denyAll();
-
-                    customizeRequests.anyRequest().authenticated();
-                })
+                .authorizeHttpRequests(customizeRequests ->
+                        customizeRequests
+                                .requestMatchers(HttpMethod.GET, "/pizzas/**").hasAnyRole("ADMIN", "CUSTOMER")
+                                .requestMatchers(HttpMethod.POST, "/pizzas/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/pizzas/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH).denyAll()
+                                .requestMatchers("/orders/**").hasRole("ADMIN")
+                                .requestMatchers("/customers/**").hasRole("ADMIN")
+                                .anyRequest()
+                                .authenticated()
+                )
                 .httpBasic(Customizer.withDefaults());
 
         return http.build();
@@ -37,7 +42,13 @@ public class SecurityConfig {
                 .username("admin")
                 .password(passwordEncoder().encode("admin"))
                 .roles("ADMIN").build();
-        return new InMemoryUserDetailsManager(admin);
+
+        var customer = User.builder()
+                .username("customer")
+                .password(passwordEncoder().encode("customer123"))
+                .roles("CUSTOMER").build();
+
+        return new InMemoryUserDetailsManager(admin, customer);
     }
 
     @Bean
