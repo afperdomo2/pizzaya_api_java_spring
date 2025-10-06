@@ -27,6 +27,8 @@ public class UserSecurityService implements UserDetailsService {
         UserEntity user = this.userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
 
+        System.out.println(user.toString());
+
         String[] roles = user.getRoles().stream()
                 .map(r -> r.getId().getRole())
                 .toArray(String[]::new);
@@ -73,7 +75,7 @@ public class UserSecurityService implements UserDetailsService {
     private String[] getAuthoritiesFromRole(String role) {
         // Cualquiera de estos roles puede pedir una orden aleatoria
         if ("ADMIN".equals(role) || "CUSTOMER".equals(role)) {
-            return new String[]{"RANDOM_ORDER" };
+            return new String[]{"RANDOM_ORDER"};
         }
         return new String[]{};
     }

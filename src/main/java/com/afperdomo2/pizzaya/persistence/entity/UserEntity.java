@@ -39,4 +39,17 @@ public class UserEntity extends AuditableEntity implements Serializable {
     // Relaciones
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserRoleEntity> roles;
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", isActive=" + isActive +
+                ", isLocked=" + isLocked +
+                ", roles=" + roles +
+                '}';
+    }
 }
