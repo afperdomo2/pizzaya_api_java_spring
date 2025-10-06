@@ -5,6 +5,7 @@ import com.afperdomo2.pizzaya.persistence.entity.OrderType;
 import com.afperdomo2.pizzaya.persistence.projection.OrderSummary;
 import com.afperdomo2.pizzaya.persistence.repository.CustomerOrderRepository;
 import com.afperdomo2.pizzaya.service.dto.RandomOrderDto;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class CustomerOrderService {
         return this.customerOrderRepository.findAllByOrderTypeIn(outsideOrderTypeCodes);
     }
 
+    @Secured("ROLE_ADMIN")
     public List<CustomerOrderEntity> findCustomerOrders(Long customerId) {
         return this.customerOrderRepository.findCustomerOrders(customerId);
     }
