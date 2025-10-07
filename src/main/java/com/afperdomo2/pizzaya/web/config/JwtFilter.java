@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -33,16 +34,14 @@ public class JwtFilter extends OncePerRequestFilter {
         // 1. Obtener el token del encabezado Authorization
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            // filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
             return;
         }
 
         // 2. Extraer el token y validarlo
         String token = authHeader.split(" ")[1].trim();
         if (!jwtUtil.isValid(token)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            // filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -57,7 +56,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 user.getAuthorities()
         );
 
+        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        System.out.println("------------------ JWT FILTER -----------------");
+        System.out.println(authenticationToken);
         filterChain.doFilter(request, response);
     }
 }
