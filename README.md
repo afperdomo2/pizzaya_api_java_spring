@@ -98,6 +98,34 @@ Para probar los endpoints protegidos en Swagger:
 4. Ingresar el token en el formato: `Bearer {token}`
 5. Ahora puedes probar los endpoints protegidos
 
+### 📮 Colección de Postman
+
+El proyecto incluye una colección de Postman completa con todos los endpoints disponibles:
+
+**Archivo**: `PizzaYa_API.postman_collection.json`
+
+#### Importar en Postman
+
+1. Abrir Postman
+2. Ir a **File > Import** o hacer clic en el botón **Import**
+3. Seleccionar el archivo `PizzaYa_API.postman_collection.json`
+4. La colección se importará con todas las carpetas organizadas por recurso
+
+#### Características de la colección
+
+- ✅ **Variables de entorno**: `base_url` configurada para `http://localhost:8082/pizzaya/api`
+- 🔐 **Autenticación automática**: El token JWT se guarda automáticamente al hacer login
+- 📁 **Organizada por recursos**: Autenticación, Pizzas, Órdenes y Clientes
+- 📝 **Descripciones incluidas**: Cada endpoint tiene su descripción y parámetros documentados
+- 🔑 **Bearer Token configurado**: La autenticación JWT está preconfigurada en toda la colección
+
+#### Uso rápido
+
+1. Importar la colección en Postman
+2. Ejecutar el endpoint **Sign In** en la carpeta "Autenticación"
+3. El token JWT se guardará automáticamente
+4. Probar cualquier otro endpoint - la autenticación se aplicará automáticamente
+
 ## 🎯 Endpoints Principales
 
 ### Autenticación

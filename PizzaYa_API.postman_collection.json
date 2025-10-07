@@ -1,0 +1,567 @@
+{
+	"info": {
+		"_postman_id": "pizzaya-api-collection",
+		"name": "PizzaYa API",
+		"description": "Colección de endpoints para la API de gestión de pizzas PizzaYa. Incluye autenticación JWT, gestión de pizzas, órdenes y clientes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8082/pizzaya/api",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Autenticación",
+			"item": [
+				{
+					"name": "Sign In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var token = pm.response.headers.get('Authorization');",
+									"    if (token) {",
+									"        pm.collectionVariables.set('jwt_token', token.replace('Bearer ', ''));",
+									"        pm.environment.set('jwt_token', token.replace('Bearer ', ''));",
+									"        console.log('Token JWT guardado automáticamente');",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/sign-in",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"sign-in"
+							]
+						},
+						"description": "Iniciar sesión y obtener token JWT. El token se guarda automáticamente en las variables de colección."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints de autenticación"
+		},
+		{
+			"name": "Pizzas",
+			"item": [
+				{
+					"name": "Obtener todas las pizzas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas?page=0&size=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Número de página"
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"description": "Tamaño de página"
+								}
+							]
+						},
+						"description": "Obtener todas las pizzas con paginación. Requiere autenticación."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener pizza por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"1"
+							]
+						},
+						"description": "Obtener una pizza específica por su ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener pizzas disponibles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/available?page=0&size=10&sortBy=price&direction=asc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"available"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "price",
+									"description": "Campo para ordenar"
+								},
+								{
+									"key": "direction",
+									"value": "asc",
+									"description": "asc o desc"
+								}
+							]
+						},
+						"description": "Obtener pizzas disponibles con paginación y ordenamiento."
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar pizza por nombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/available/search?name=Margarita",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"available",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Margarita"
+								}
+							]
+						},
+						"description": "Buscar una pizza disponible por nombre exacto."
+					},
+					"response": []
+				},
+				{
+					"name": "Pizzas con ingrediente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/available/with-ingredient/queso",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"available",
+								"with-ingredient",
+								"queso"
+							]
+						},
+						"description": "Buscar pizzas que contengan un ingrediente específico."
+					},
+					"response": []
+				},
+				{
+					"name": "Pizzas sin ingrediente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/available/without-ingredient/piña",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"available",
+								"without-ingredient",
+								"piña"
+							]
+						},
+						"description": "Buscar pizzas que NO contengan un ingrediente específico."
+					},
+					"response": []
+				},
+				{
+					"name": "Top 3 pizzas más baratas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/cheaper-than/15.0",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"cheaper-than",
+								"15.0"
+							]
+						},
+						"description": "Obtener las 3 pizzas más baratas por debajo de un precio dado."
+					},
+					"response": []
+				},
+				{
+					"name": "Contar pizzas veganas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/vegan/count",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"vegan",
+								"count"
+							]
+						},
+						"description": "Contar el número total de pizzas veganas."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear pizza",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Pizza Especial\",\n    \"description\": \"Pizza con ingredientes especiales\",\n    \"price\": 18.99,\n    \"isVegetarian\": false,\n    \"isVegan\": false,\n    \"isAvailable\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pizzas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas"
+							]
+						},
+						"description": "Crear una nueva pizza. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar pizza",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"Pizza con ingredientes premium actualizados\",\n    \"price\": 19.99,\n    \"isVegetarian\": false,\n    \"isVegan\": false,\n    \"isAvailable\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pizzas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"1"
+							]
+						},
+						"description": "Actualizar una pizza existente. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar precio de pizza",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"newPrice\": 16.99\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/pizzas/price",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"price"
+							]
+						},
+						"description": "Actualizar solo el precio de una pizza. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar pizza",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/pizzas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"pizzas",
+								"1"
+							]
+						},
+						"description": "Eliminar una pizza. Solo para rol ADMIN."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gestión de pizzas"
+		},
+		{
+			"name": "Órdenes",
+			"item": [
+				{
+					"name": "Obtener todas las órdenes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						},
+						"description": "Obtener todas las órdenes. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener órdenes del día",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/today",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"today"
+							]
+						},
+						"description": "Obtener órdenes realizadas hoy. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener órdenes para llevar/delivery",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/outside",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"outside"
+							]
+						},
+						"description": "Obtener órdenes de tipo delivery o carryout. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener órdenes de un cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/customer/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"customer",
+								"1"
+							]
+						},
+						"description": "Obtener todas las órdenes de un cliente específico. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener resumen de orden",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/orders/1/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1",
+								"summary"
+							]
+						},
+						"description": "Obtener resumen detallado de una orden. Solo para rol ADMIN."
+					},
+					"response": []
+				},
+				{
+					"name": "Crear orden aleatoria",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerId\": 1,\n    \"orderType\": \"D\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/random",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"random"
+							]
+						},
+						"description": "Crear orden aleatoria con 20% de descuento. Requiere permiso RANDOM_ORDER (ADMIN, CUSTOMER). Tipos: D=Delivery, C=Carryout, S=Onsite."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gestión de órdenes"
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Buscar cliente por teléfono",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/customers/phone/1234567890",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								"phone",
+								"1234567890"
+							]
+						},
+						"description": "Buscar cliente por número de teléfono. Requiere rol ADMIN o CUSTOMER."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener órdenes de cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/customers/1/orders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								"1",
+								"orders"
+							]
+						},
+						"description": "Obtener todas las órdenes de un cliente. Requiere rol ADMIN o CUSTOMER."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gestión de clientes"
+		}
+	]
+}
