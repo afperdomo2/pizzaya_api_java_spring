@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(customizeRequests ->
                         customizeRequests
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/pizzas/**").hasAnyRole("ADMIN", "CUSTOMER", "EMPLOYEE")
                                 .requestMatchers(HttpMethod.POST, "/pizzas/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/pizzas/**").hasRole("ADMIN")
