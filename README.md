@@ -8,10 +8,14 @@ Una API REST para la gestión de pizzas construida con **Spring Boot 3.5.6** y *
 - 👥 **Gestión de clientes** con información básica
 - 📋 **Sistema de órdenes** con tipos (Delivery, Carryout, Onsite)
 - 🎲 **Procedimiento almacenado** para órdenes aleatorias con 20% descuento
+- 🔒 **Autenticación y Autorización** con Spring Security y JWT
+- 👤 **Sistema de usuarios y roles** (ADMIN, CUSTOMER, EMPLOYEE)
+- 🛡️ **Control de acceso basado en roles** con autoridades personalizadas
 - 📚 **Documentación automática** con Swagger/OpenAPI 3
 - 🗄️ **Base de datos MySQL** con Docker Compose
 - 🔧 **Mapeo automático** con MapStruct
 - ✅ **Validaciones** con Bean Validation
+- 📝 **Auditoría automática** de entidades (createdBy, updatedBy, createdAt, updatedAt)
 - 🏗️ **Arquitectura por capas** (Controller, Service, Persistence)
 - 🐳 **Containerización** con Docker
 - 🔄 **Hot reload** en desarrollo con DevTools
@@ -22,6 +26,8 @@ Una API REST para la gestión de pizzas construida con **Spring Boot 3.5.6** y *
 - **Spring Boot 3.5.6**
 - **Spring Web** - REST API
 - **Spring Data JPA** - Persistencia de datos
+- **Spring Security** - Autenticación y autorización
+- **JWT (Auth0)** - Tokens de acceso
 - **Spring Validation** - Validación de datos
 - **MySQL** - Base de datos
 - **MapStruct 1.6.3** - Mapeo de objetos
@@ -82,42 +88,55 @@ Una vez que la aplicación esté ejecutándose, puedes acceder a la documentaci�
 http://localhost:8082/pizzaya/api/swagger-ui/index.html
 ```
 
+### 🔐 Autenticación en Swagger
+
+Para probar los endpoints protegidos en Swagger:
+
+1. Usar el endpoint `/auth/sign-in` con credenciales válidas
+2. Copiar el JWT del header `Authorization` de la respuesta
+3. Hacer clic en el botón **"Authorize"** en Swagger UI
+4. Ingresar el token en el formato: `Bearer {token}`
+5. Ahora puedes probar los endpoints protegidos
+
 ## 🎯 Endpoints Principales
+
+### Autenticación
+
+| Método | Endpoint | Descripción | Autenticación |
+|--------|----------|-------------|---------------|
+| `POST` | `/auth/sign-in` | Iniciar sesión y obtener JWT | ❌ No requerida |
 
 ### Pizzas
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/pizzas` | Obtener todas las pizzas (paginado) |
-| `GET` | `/pizzas/{id}` | Obtener pizza por ID |
-| `GET` | `/pizzas/available` | Obtener pizzas disponibles (paginado y ordenado) |
-| `GET` | `/pizzas/cheaper-than/{price}` | Obtener top 3 pizzas más baratas por debajo de un precio |
-| `GET` | `/pizzas/vegan/count` | Contar pizzas veganas |
-| `POST` | `/pizzas` | Crear nueva pizza |
-| `PUT` | `/pizzas/{id}` | Actualizar pizza |
-| `DELETE` | `/pizzas/{id}` | Eliminar pizza |
-| `PUT` | `/pizzas/price` | Actualizar precio de pizza |
+| Método | Endpoint | Descripción | Roles Permitidos |
+|--------|----------|-------------|------------------|
+| `GET` | `/pizzas` | Obtener todas las pizzas (paginado) | ADMIN, CUSTOMER, EMPLOYEE |
+| `GET` | `/pizzas/{id}` | Obtener pizza por ID | ADMIN, CUSTOMER, EMPLOYEE |
+| `GET` | `/pizzas/available` | Obtener pizzas disponibles (paginado y ordenado) | ADMIN, CUSTOMER, EMPLOYEE |
+| `GET` | `/pizzas/cheaper-than/{price}` | Obtener top 3 pizzas más baratas | ADMIN, CUSTOMER, EMPLOYEE |
+| `GET` | `/pizzas/vegan/count` | Contar pizzas veganas | ADMIN, CUSTOMER, EMPLOYEE |
+| `POST` | `/pizzas` | Crear nueva pizza | ADMIN |
+| `PUT` | `/pizzas/{id}` | Actualizar pizza | ADMIN |
+| `DELETE` | `/pizzas/{id}` | Eliminar pizza | ADMIN |
+| `PUT` | `/pizzas/price` | Actualizar precio de pizza | ADMIN |
 
 ### Órdenes de Clientes
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/orders` | Obtener todas las órdenes |
-| `GET` | `/orders/today` | Obtener órdenes del día |
-| `GET` | `/orders/outside` | Obtener órdenes para llevar/delivery |
-| `GET` | `/orders/customer/{customerId}` | Obtener órdenes de un cliente |
-| `GET` | `/orders/{orderId}/summary` | Obtener resumen de una orden |
-| `POST` | `/orders/random` | Crear orden aleatoria con descuento |
+| Método | Endpoint | Descripción | Roles/Permisos |
+|--------|----------|-------------|----------------|
+| `GET` | `/orders` | Obtener todas las órdenes | ADMIN |
+| `GET` | `/orders/today` | Obtener órdenes del día | ADMIN |
+| `GET` | `/orders/outside` | Obtener órdenes para llevar/delivery | ADMIN |
+| `GET` | `/orders/customer/{customerId}` | Obtener órdenes de un cliente | ADMIN |
+| `GET` | `/orders/{orderId}/summary` | Obtener resumen de una orden | ADMIN |
+| `POST` | `/orders/random` | Crear orden aleatoria con descuento | RANDOM_ORDER (ADMIN, CUSTOMER) |
 
 ### Clientes
 
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| `GET` | `/customers` | Obtener todos los clientes |
-| `GET` | `/customers/{id}` | Obtener cliente por ID |
-| `POST` | `/customers` | Crear nuevo cliente |
-| `PUT` | `/customers/{id}` | Actualizar cliente |
-| `DELETE` | `/customers/{id}` | Eliminar cliente |
+| Método | Endpoint | Descripción | Roles Permitidos |
+|--------|----------|-------------|------------------|
+| `GET` | `/customers/phone/{phone}` | Obtener cliente por teléfono | ADMIN, CUSTOMER |
+| `GET` | `/customers/{customerId}/orders` | Obtener órdenes de un cliente | ADMIN, CUSTOMER |
 
 ## ⚙️ Configuración
 
@@ -282,9 +301,17 @@ src/main/java/com/afperdomo2/pizzaya/
 │   ├── 📁 exception/              # Excepciones personalizadas
 │   ├── CustomerOrderService.java  # Servicio de órdenes
 │   ├── CustomerService.java       # Servicio de clientes
-│   └── PizzaService.java          # Servicio de pizzas
+│   ├── PizzaService.java          # Servicio de pizzas
+│   └── UserSecurityService.java   # Servicio de seguridad
 └── 📁 web/                        # Capa de presentación
+    ├── 📁 config/                 # Configuraciones
+    │   ├── CorsConfig.java        # Configuración CORS
+    │   ├── JwtFilter.java         # Filtro JWT
+    │   ├── JwtUtil.java           # Utilidades JWT
+    │   ├── OpenApiConfig.java     # Configuración Swagger
+    │   └── SecurityConfig.java    # Configuración Spring Security
     └── 📁 controller/             # Controladores REST
+        ├── AuthController.java
         ├── CustomerController.java
         ├── CustomerOrderController.java
         └── PizzaController.java
@@ -333,6 +360,46 @@ src/main/java/com/afperdomo2/pizzaya/
 | `pizza_id` | BIGINT | ID de la pizza (parte de clave compuesta) |
 | `quantity` | DECIMAL(10,2) | Cantidad |
 | `subtotal` | DECIMAL(10,2) | Subtotal |
+
+### Tabla: users
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | BIGINT | Identificador único (autoincremental) |
+| `username` | VARCHAR | Nombre de usuario (único) |
+| `email` | VARCHAR | Email del usuario (único) |
+| `password` | VARCHAR | Contraseña encriptada (BCrypt) |
+| `is_active` | BOOLEAN | Indica si el usuario está activo |
+| `is_locked` | BOOLEAN | Indica si el usuario está bloqueado |
+
+### Tabla: user_roles
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `user_id` | BIGINT | ID del usuario (parte de clave compuesta) |
+| `role` | VARCHAR | Rol del usuario: ADMIN, CUSTOMER, EMPLOYEE |
+| `granted_date` | DATETIME | Fecha de asignación del rol |
+
+## 🔐 Sistema de Seguridad
+
+### Roles y Permisos
+
+La aplicación implementa un sistema de control de acceso basado en roles:
+
+- **ADMIN**: Acceso completo a todos los recursos
+- **CUSTOMER**: Acceso a pizzas (lectura) y gestión de clientes y órdenes propias
+- **EMPLOYEE**: Acceso de lectura a pizzas
+
+### Autoridades Personalizadas
+
+- **RANDOM_ORDER**: Permiso especial para crear órdenes aleatorias (asignado a ADMIN y CUSTOMER)
+
+### Autenticación JWT
+
+- Los tokens JWT tienen una validez de **15 días**
+- Se generan mediante el algoritmo **HMAC256**
+- Se envían en el header `Authorization` con el formato: `Bearer {token}`
+- Incluyen información del usuario autenticado para auditoría automática
 
 ## 🤝 Contribuciones
 
